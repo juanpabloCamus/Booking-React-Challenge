@@ -1,0 +1,9 @@
+.booking-container{
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.time-container{
+  display: flex;
+}
