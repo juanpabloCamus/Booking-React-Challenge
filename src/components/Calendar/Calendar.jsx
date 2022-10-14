@@ -9,9 +9,18 @@ import DatePicker from 'react-datepicker';
 const CalendarContainer = () => {
 
   const [grades, setGrades] = useState([]);
+  const [grade, setGrade] = useState('');
   const [entryTime, setEntryTime] = useState(new Date());
   const [exitTime, setExitTime] = useState(new Date());
   const [date, setDate] = useState(new Date());
+  const [been, setBeen] = useState(false)
+  const [booking, setBooking] = useState({
+    grade:'',
+    entryTime:'',
+    exitTime:'',
+    beenBefore: false,
+    date:''
+  })
 
   useEffect(() => {
     async function fetchGrades(){
@@ -20,10 +29,30 @@ const CalendarContainer = () => {
     }
     fetchGrades()
   }, [])
-  
+
+  const handleChange = (e) => {
+    if(e.target.name === 'grade') {
+      setGrade(e.target.value)
+    } else  {
+      setBeen(e.target.checked)
+    }
+  }
+
+  const handleCreateBooking = (e) => {
+    e.preventDefault
+    const newBooking = {
+      grade,
+      entryTime: String(entryTime).slice(16),
+      exitTime: String(exitTime).slice(16),
+      beenBefore: been,
+      date: date.map(d => d = String(d).slice(0,15))
+    }
+    console.log(newBooking);
+  }
+
   return (
     <div className='booking-container'>
-      <select>
+      <select name='grade' onChange={handleChange}>
         {
           grades?.map(g => (
             <option key={g}>{g}</option>
@@ -52,6 +81,10 @@ const CalendarContainer = () => {
           dateFormat="h:mm aa"
           />
       </div>
+      <div>
+        <input name='been' onChange={handleChange} type='checkbox'></input>
+        <span>Been Before</span>
+      </div>
       <Calendar 
         onChange={setDate} 
         value={date}
@@ -59,7 +92,7 @@ const CalendarContainer = () => {
         minDate={new Date()}
         selectRange={true} 
       />
-      <button>Create Booking</button>
+      <button type='submit' onClick={handleCreateBooking}>Create Booking</button>
   </div>
   );
 };
