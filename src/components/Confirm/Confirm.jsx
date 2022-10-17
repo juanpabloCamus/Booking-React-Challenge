@@ -27,7 +27,9 @@ function Confirm({booking, setBooking}) {
   }, [])
   
   const handleSelect = (s) => {
-    setSelects(selects.concat(s))
+    let selected = selects
+    selected.push(s);
+    setSelects(selected);
   }
 
   const handleConfirm = () => {
@@ -35,6 +37,7 @@ function Confirm({booking, setBooking}) {
       console.log(`Date created successfully with ${s.name} at ${s.daysAvaliable[3]}}`)
     )
     setBooking(false)
+    setSelects([])
   }
 
   if (avaliableStaff.length === 0) {
