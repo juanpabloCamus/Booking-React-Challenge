@@ -9,11 +9,16 @@ import DatePicker from 'react-datepicker';
 const CalendarContainer = ({setBooking}) => {
 
   const [grades, setGrades] = useState([]);
-  const [grade, setGrade] = useState('');
+  const [grade, setGrade] = useState();
   const [entryTime, setEntryTime] = useState(new Date());
   const [exitTime, setExitTime] = useState(new Date());
   const [date, setDate] = useState(new Date());
-  const [been, setBeen] = useState(false)
+  const [been, setBeen] = useState(false);
+  const [error, setError] = useState({
+    error: false,
+    message: ''
+  })
+  
 
   useEffect(() => {
     async function fetchGrades(){
@@ -33,6 +38,12 @@ const CalendarContainer = ({setBooking}) => {
 
   const handleCreateBooking = (e) => {
     e.preventDefault
+
+    if(grade === undefined) return setError({error: true, message:'Please select a grade'});
+    if(!(Array.isArray(date))) return setError({error: true, message:'Please select a range of dates'});
+    
+    setError({error: false, message:''});
+
     const newBooking = {
       grade,
       entryTime: String(entryTime).slice(16),
@@ -40,13 +51,14 @@ const CalendarContainer = ({setBooking}) => {
       beenBefore: been,
       date: date.map(d => d = String(d).slice(0,15))
     }
-    console.log(newBooking);
+
     setBooking(newBooking)
   }
 
   return (
     <div className='booking-container'>
       <select className='grade-select' name='grade' onChange={handleChange}>
+        <option selected disabled>---</option>
         {
           grades?.map(g => (
             <option key={g}>{g}</option>
@@ -89,6 +101,9 @@ const CalendarContainer = ({setBooking}) => {
         />
       </div>
       <button className='submit' type='submit' onClick={handleCreateBooking}>Create Booking</button>
+      {
+        error.error ? <span id='error-msg'>{error.message}</span> : null
+      }
   </div>
   );
 };

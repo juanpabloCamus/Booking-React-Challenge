@@ -3,31 +3,16 @@ import staff from '../../staff';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { faker } from 'https://cdn.skypack.dev/@faker-js/faker';
+import Card from './Card';
 
-function Card({name, image, grade, date}) {
-
-  const [select, setSelected] = useState(false);
-
-  return (
-    <div onClick={() => setSelected(select ? false : true)} className='card-container' id={select ? 'select' : null}>
-      <img alt='profilePic' src={image}></img>
-      <div className='card-date-container'>
-        <h4>{String(date[3]).slice(0,15)}</h4>
-        <span><b>{name}</b> is avaliable</span>
-        <span>{grade}</span>
-      </div>
-      <span>{String(date[3]).slice(16,21)} - {String(date[1]).slice(16,21)}</span>
-    </div>
-  )
-}
-
-function Confirm({booking}) {
+function Confirm({booking, setBooking}) {
 
   const [avaliableStaff, setAvaliableStaff] = useState(staff);
   const [selects, setSelects] = useState([])
 
   useEffect(() => {
     let current = avaliableStaff;
+
     current = current.filter(s => s.grade === booking.grade);
     current = current.filter(s => {
       let bookingFirstDay = new Date(booking.date[0]);
@@ -37,7 +22,7 @@ function Confirm({booking}) {
       return (bookingFirstDay > staffFirstDay && bookingLastDay < staffLastDay)
     })
     current.map(c => c.daysAvaliable.push(faker.date.between(c.daysAvaliable[0], c.daysAvaliable[1])))
-    console.log(current);
+
     setAvaliableStaff(current)
   }, [])
   
@@ -47,13 +32,24 @@ function Confirm({booking}) {
 
   const handleConfirm = () => {
     selects.map(s => 
-      console.log(`Date created with ${s.name} at ${s.daysAvaliable[3]}}`)
+      console.log(`Date created successfully with ${s.name} at ${s.daysAvaliable[3]}}`)
+    )
+    setBooking(false)
+  }
+
+  if (avaliableStaff.length === 0) {
+    return (
+      <div className="confirm-container">
+        <button id='back' onClick={() => {setBooking(false)}}>Go Back</button>
+        <h1 id='not-avaliable'>Sorry! We do not have staff available for the selected dates</h1>
+      </div>
+      
     )
   }
 
   return (
     <div className="confirm-container">
-      <h3>Bookings to be confirmed</h3>
+      <button id='back' onClick={() => {setBooking(false)}}>Go Back</button>
       {
         avaliableStaff.map(s => (
           <div key={s.name} onClick={()=>handleSelect(s)}>

@@ -27,6 +27,7 @@ function App() {
         </header>
         <Confirm
           booking = {booking}
+          setBooking = {setBooking}
         />
       </>
     }

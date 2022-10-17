@@ -4,7 +4,7 @@ import axios from 'axios';
 const staff = [];
 const grades = ['HCA (Care assistant)', 'RGN (Nurse)', 'SW (Support Worker)']
 
-for (let i = 0; staff.length < 10; i++) {
+for (let i = 0; staff.length < 30; i++) {
   let newPerson = {
     name: faker.name.fullName(),
     image: faker.image.avatar(),
@@ -13,5 +13,5 @@ for (let i = 0; staff.length < 10; i++) {
   }
   staff.push(newPerson);
 }
-console.log(staff);
+
 export default staff;
