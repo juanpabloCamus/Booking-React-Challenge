@@ -28,7 +28,8 @@ function Confirm({booking, setBooking}) {
   
   const handleSelect = (s) => {
     let selected = selects
-    selected.push(s);
+    if(!(selected.includes(s))) selected.push(s);
+    else selected = selected.filter(a=> a != s);
     setSelects(selected);
   }
 
@@ -46,7 +47,6 @@ function Confirm({booking, setBooking}) {
         <button id='back' onClick={() => {setBooking(false)}}>Go Back</button>
         <h1 id='not-avaliable'>Sorry! We do not have staff available for the selected dates</h1>
       </div>
-      
     )
   }
 
